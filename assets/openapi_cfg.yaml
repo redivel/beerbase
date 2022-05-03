@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: BeerBase
+  description: An interactive database of different types of beer with information about them.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+paths:
+  /version:
+    get:
+      operationId: version.get_version
+      tags:
+        - Version
+      summary: Retrieve version of application.
+      description: |
+        Retrieve current version number of the application.
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 1.0.0
+
+#  /beer:
+#    #TODO
+#
+#  /update/{beer_id}:
+#    #TODO
+
+
