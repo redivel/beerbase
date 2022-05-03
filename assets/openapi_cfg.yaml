@@ -26,10 +26,126 @@ paths:
                 type: string
                 example: 1.0.0
 
-#  /beer:
-#    #TODO
-#
+  /beer:
+    get:
+      operationId: stream.get_beer
+      tags:
+        - Get
+      summary: Get beer(s) from database.
+      description: |
+        Get specified beer(s) from database matching provided parameters.
+      parameters:
+        - name: abv
+          in: query
+          required: false
+          schema:
+            type: number
+            example: 0.081999
+          description: ABV (Alcohol by Volume) of searched beer(s).
+        - name: ibu
+          in: query
+          schema:
+            type: number
+            example: 52.0
+          description: IBU (International Bitterness Unit) of searched beer(s).
+        - name: id
+          in: query
+          schema:
+            type: integer
+            example: 2169
+          description: ID of searched beer(s).
+        - name: name
+          in: query
+          schema:
+            type: string
+            example: Ballz Deep Double IPA
+          description: Name of searched beer(s).
+        - name: style
+          in: query
+          schema:
+            type: string
+            example: English Brown Ale
+          description: Style of searched beer(s).
+        - name: brewery_id
+          in: query
+          schema:
+            type: integer
+            example: 401
+          description: ID of brewer of searched beer(s).
+        - name: size
+          in: query
+          schema:
+            type: number
+            example: 12.0
+          description: Size of searched beer(s) in ounces.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Beer"
+              examples:
+                example-1:
+                  summary: Status 200
+                  description: GET `/beer?id=2169
+                  value:
+                    - abv: 0.06
+                    - ibu:
+                    - id: 2169
+                    - name: Rhubarbarian
+                    - style: Cider
+                    - brewery_id: 154
+                    - size: 12.0
+        400:
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Bad request
+              examples:
+                example-1:
+                  summary: Status 400
+                  description: GET `/beer?id=abcd
+                  value: Bad request
+
 #  /update/{beer_id}:
 #    #TODO
 
-
+components:
+  schemas:
+    Beer:
+      type: object
+      description: Object containing all attributes known about a beer.
+      properties:
+        abv:
+          type: number
+          example: 0.081999
+          description: ABV (Alcohol by Volume) of searched beer(s).
+        ibu:
+          type: number
+          example: 52.0
+          description: IBU (International Bitterness Unit) of searched beer(s).
+        id:
+          type: integer
+          example: 2169
+          description: ID of searched beer(s).
+        name:
+          type: string
+          example: Ballz Deep Double IPA
+          description: Name of searched beer(s).
+        style:
+          type: string
+          example: English Brown Ale
+          description: Style of searched beer(s).
+        brewery_id:
+          type: integer
+          example: 401
+          description: ID of brewer of searched beer(s).
+        size:
+          type: number
+          example: 12.0
+          description: Size of searched beer(s) in ounces.
