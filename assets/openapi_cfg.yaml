@@ -105,15 +105,68 @@ paths:
             text/plain:
               schema:
                 type: string
-                example: Bad request
+                example: Beer(s) could not be found.
               examples:
                 example-1:
                   summary: Status 400
                   description: GET `/beer?id=abcd
-                  value: Bad request
+                  value: Invalid ID parameter given.
+                example-2:
+                  summary: Status 400
+                  description: GET `/beer?id=9999999
+                  value: Beer(s) could not be found.
+        500:
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Internal server error.
+              examples:
+                example-1:
+                  summary: Status 500
+                  description: GET `/beer?id=1234
+                  value: Internal server error.
 
-#  /update/{beer_id}:
-#    #TODO
+  /beer/delete:
+    delete:
+      operationId: stream.delete_beer
+      tags:
+        - Delete
+      summary: Delete a beer from database.
+      description: |
+        Delete a beer specified by ID from the database.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 2169
+          description: ID of beer to be deleted.
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Beer successfully deleted.
+        400:
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Beer could not be found.
+        500:
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Beer could not be deleted.
+
 
 components:
   schemas:
