@@ -1,15 +1,22 @@
 from __future__ import annotations
 
-from typing import List, Dict, Union
+from typing import Optional, List, Dict, Union
 
 from datatypes import Beer
 
 beers = []
-beer = Beer(0.07, 82.0, 2519, "Bimini Twist", "American IPA", 67, 12.0)
+beer = Beer(abv=0.07, ibu=82.0, beer_id=2519, name="Bimini Twist", style="American IPA", brewery_id=67, size=12.0)
 beers.append(beer)
 
 
-def get_beer(abv: float = None, ibu: float = None, beer_id: int = None, name: str = None, style: str = None, brewery_id: int = None, size: float = None) \
+def get_beer(abv: Optional[float] = None,
+             ibu: Optional[float] = None,
+             beer_id: Optional[int] = None,
+             name: Optional[str] = None,
+             style: Optional[str] = None,
+             brewery_id: Optional[int] = None,
+             size: Optional[float] = None
+             ) \
         -> tuple[Union[str, List[Dict[str, Union[int, float, str]]]], int]:
     """Handler for /beer endpoint
 
