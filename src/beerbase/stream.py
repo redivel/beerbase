@@ -4,10 +4,6 @@ from typing import Optional, List, Dict, Union
 
 from datatypes import Beer
 
-beers = []
-beer = Beer(abv=0.07, ibu=82.0, beer_id=2519, name="Bimini Twist", style="American IPA", brewery_id=67, size=12.0)
-beers.append(beer)
-
 
 def get_beer(abv: Optional[float] = None,
              ibu: Optional[float] = None,
@@ -37,11 +33,7 @@ def get_beer(abv: Optional[float] = None,
     code = 200
 
     try:
-        for item in beers:
-            if beer.beer_id == beer_id:
-                if response is None:
-                    response = []
-                response.append(beer.to_dict())
+        response = ""
     except Exception as exc:
         if isinstance(exc, RuntimeError):
             response = "No such beer found."
@@ -73,10 +65,7 @@ def delete_beer(beer_id: int) -> tuple[str, int]:
     code = 200
 
     try:
-        for item in beers:
-            if item.beer_id == beer_id:
-                beers.remove(item)
-                response = "Beer successfully deleted."
+        response = "Beer successfully deleted."
     except Exception as exc:
         if isinstance(exc, RuntimeError):
             response = "No such beer found."
