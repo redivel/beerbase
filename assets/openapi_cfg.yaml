@@ -48,7 +48,7 @@ paths:
             type: number
             example: 52.0
           description: IBU (International Bitterness Unit) of searched beer(s).
-        - name: id
+        - name: beer_id
           in: query
           schema:
             type: integer
@@ -137,7 +137,7 @@ paths:
       description: |
         Delete a beer specified by ID from the database.
       parameters:
-        - name: id
+        - name: beer_id
           in: query
           required: true
           schema:
@@ -182,7 +182,7 @@ components:
           type: number
           example: 52.0
           description: IBU (International Bitterness Unit) of searched beer(s).
-        id:
+        beer_id:
           type: integer
           example: 2169
           description: ID of searched beer(s).
