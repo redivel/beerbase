@@ -3,6 +3,9 @@ from __future__ import annotations
 from typing import Optional, List, Dict, Union
 
 from datatypes import Beer
+from database import Database, Database_handler
+
+handler = Database_handler()
 
 
 def get_beer(abv: Optional[float] = None,
@@ -33,7 +36,8 @@ def get_beer(abv: Optional[float] = None,
     code = 200
 
     try:
-        response = ""
+        response = handler.get_beers(abv=abv, ibu=ibu, beer_id=beer_id, name=name, style=style,
+                                     brewery_id=brewery_id, size=size)
     except Exception as exc:
         if isinstance(exc, RuntimeError):
             response = "No such beer found."
@@ -42,7 +46,7 @@ def get_beer(abv: Optional[float] = None,
             response = "Internal server error."
             code = 500
     else:
-        if response is None:
+        if not response:
             response = "No such beer found."
             code = 400
 

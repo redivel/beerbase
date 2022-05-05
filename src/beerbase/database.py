@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import csv
 
-from sqlalchemy import create_engine
+import kwargs as kwargs
+from sqlalchemy import create_engine, or_
 from sqlalchemy.orm import sessionmaker
 from typing import Optional, List
 from pathlib import Path
@@ -19,7 +20,8 @@ class Database(metaclass=Singleton):
             raise ValueError("No database URL passed")
         else:
             try:
-                self.engine = create_engine(url=f'sqlite:///{db_path}', echo=False)
+                url = f'sqlite:///{db_path}'
+                self.engine = create_engine(url=url, echo=True)
                 Session = sessionmaker(bind=self.engine)
                 self.session = Session()
             except Exception as exc:
@@ -46,11 +48,26 @@ class Database_handler():
                 self.session.add(beer)
             self.session.commit()
 
-    def get_beers(self, beer_id: int, name: str) -> List[Beer]:
-        beers = []
+    def get_beers(self, abv: Optional[float] = None,
+                  ibu: Optional[float] = None,
+                  beer_id: Optional[int] = None,
+                  name: Optional[str] = None,
+                  style: Optional[str] = None,
+                  brewery_id: Optional[int] = None,
+                  size: Optional[float] = None) -> List[Beer]:
+
+        results = []
         try:
-            for item in self.session.query(Beer).filter_by(beer_id=beer_id, name=name):
-                beers.append(item)
+            # for beer in self.session.query(Beer).filter_by(beer_id=kwargs['beer_id']):
+            #     beers.append(beer.to_dict())
+            for beer in self.session.query(Beer).filter(or_(Beer.abv==abv,
+                                                            Beer.ibu==ibu,
+                                                            Beer.beer_id==beer_id,
+                                                            Beer.name==name,
+                                                            Beer.style==style,
+                                                            Beer.brewery_id==brewery_id,
+                                                            Beer.size==size)):
+                results.append(beer.to_dict())
         except Exception as exc:
             raise RuntimeError("Could not retrieve beer(s) from database.") from exc
-        return beers
+        return results

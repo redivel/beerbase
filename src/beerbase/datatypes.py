@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC
-from dataclasses import dataclass
 from typing import Dict, Union, Optional
 
 from sqlalchemy.orm import declarative_base
@@ -69,4 +68,4 @@ class Beer(Serializable, Base):
         return cls(**value)
 
     def __str__(self) -> str:
-        return self.to_dict()
+        return self.to_dict().__str__()

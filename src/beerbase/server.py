@@ -48,25 +48,28 @@ def init_db(db_path: Path, csv_path: Path) -> None:
         file = db_path.open('w')
         file.close()
 
-    Base.metadata.drop_all(Database(db_path).engine)
-    Base.metadata.create_all(Database(db_path).engine)
+    db = Database(db_path=str(db_path))
+    Base.metadata.drop_all(db.engine)
+    Base.metadata.create_all(db.engine)
 
-    handler = Database_handler()
-    handler.load_csv(csv_path)
+    if csv_path.exists():
+        handler = Database_handler()
+        handler.load_csv(csv_path)
 
 
 def main():
 
     args = parse_args()
 
+    # Initialize database
+    init_db(db_path=args.db, csv_path=args.data)
+
     # Create app and link external file locations
     app.specification_dir = args.assets
     app.add_api(specification="openapi_cfg.yaml")
     app.app.template_folder = args.templates
 
-    init_db(db_path=args.db, csv_path=args.data)
-
-    app.run(debug=True, threaded=False)
+    app.run(debug=False, threaded=False)
 
 
 if __name__ == "__main__":
