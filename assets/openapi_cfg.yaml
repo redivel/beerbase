@@ -185,7 +185,7 @@ components:
         beer_id:
           type: integer
           example: 2169
-          description: ID of searched beer(s).
+          description: ID of searched beer.
         name:
           type: string
           example: Ballz Deep Double IPA

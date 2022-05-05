@@ -33,6 +33,12 @@ class Database_handler():
         self.session = Database().session
 
     def load_csv(self, path: Path):
+        """Load contents of csv specified by file into database.
+
+        Args:
+            path (Path): Path to csv data file.
+        """
+
         with path.open('r') as file:
             reader = csv.reader(file)
             next(reader)
@@ -50,6 +56,20 @@ class Database_handler():
 
     def get_beers(self, abv: float, ibu: float, beer_id: int, name: str, style: str, brewery_id: int, size: float) \
             -> List[Beer]:
+        """Get beers matching either of specified attributes.
+
+        Args:
+            abv (float): ABV (Alcohol by Volume) of searched beer(s).
+            ibu (float): IBU (International Bitterness Unit) of searched beer(s).
+            beer_id (int): ID of searched beer.
+            name (str): Name of searched beer.
+            style (str): Style of searched beer(s).
+            brewery_id (int): ID of brewer of searched beer(s).
+            size (float): Size of searched beer(s) in ounces.
+
+        Returns:
+            List[Beer]: List of beers matching either of specified attributes.
+        """
 
         results = []
         try:
@@ -68,6 +88,14 @@ class Database_handler():
         return results
 
     def delete_beer(self, beer_id: int) -> str:
+        """Delete beer with specified ID.
+
+        Args:
+            beer_id (int): ID of beer to be deleted.
+
+        Returns:
+            str: String confirming deletion.
+        """
         try:
             beer = self.session.query(Beer).filter(Beer.beer_id == beer_id).first()
             if beer is None:

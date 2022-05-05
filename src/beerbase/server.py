@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import connexion
+import sys
 
 from flask import render_template
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from logging import INFO, getLogger, Formatter, StreamHandler
 
 from database import Database, Database_handler
 from datatypes import Base
@@ -43,6 +45,12 @@ def parse_args() -> Namespace:
 
 
 def init_db(db_path: Path, csv_path: Path) -> None:
+    """Set's up database and loads contents of csv in.
+
+    Args:
+        db_path (Path): Path to database file.
+        csv_path (Path): Path to csv datafile.
+    """
 
     if not db_path.exists():
         file = db_path.open('w')
@@ -57,7 +65,23 @@ def init_db(db_path: Path, csv_path: Path) -> None:
         handler.load_csv(csv_path)
 
 
+def set_logger() -> None:
+    """Set's up logger"""
+
+    FORMAT = '%(levelname)-7s:%(asctime)s: %(message)s'
+    formatter = Formatter(FORMAT)
+
+    handler = StreamHandler(stream=sys.stdout)
+    handler.setLevel(INFO)
+    handler.setFormatter(formatter)
+
+    logger = getLogger("logger")
+    logger.addHandler(handler)
+    logger.setLevel(INFO)
+
+
 def main():
+    set_logger()
 
     args = parse_args()
 

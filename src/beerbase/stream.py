@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from typing import Optional, List, Dict, Union
+from logging import getLogger
 
-from datatypes import Beer
 from database import Database, Database_handler
 
 handler = Database_handler()
+logger = getLogger("logger")
 
 
 def get_beer(abv: Optional[float] = -1,
@@ -41,6 +42,7 @@ def get_beer(abv: Optional[float] = -1,
     except Exception as exc:
         response = "Could not retrieve beer(s) from database."
         code = 500
+        logger.error(exc)
     else:
         if not response:
             response = "No such beer found."
@@ -74,5 +76,6 @@ def delete_beer(beer_id: int) -> tuple[str, int]:
         else:
             response = "Internal server error."
             code = 500
+        logger.error(exc)
 
     return response, code
