@@ -48,26 +48,35 @@ class Database_handler():
                 self.session.add(beer)
             self.session.commit()
 
-    def get_beers(self, abv: Optional[float] = None,
-                  ibu: Optional[float] = None,
-                  beer_id: Optional[int] = None,
-                  name: Optional[str] = None,
-                  style: Optional[str] = None,
-                  brewery_id: Optional[int] = None,
-                  size: Optional[float] = None) -> List[Beer]:
+    def get_beers(self, abv: float, ibu: float, beer_id: int, name: str, style: str, brewery_id: int, size: float) \
+            -> List[Beer]:
 
         results = []
         try:
-            # for beer in self.session.query(Beer).filter_by(beer_id=kwargs['beer_id']):
-            #     beers.append(beer.to_dict())
-            for beer in self.session.query(Beer).filter(or_(Beer.abv==abv,
-                                                            Beer.ibu==ibu,
-                                                            Beer.beer_id==beer_id,
-                                                            Beer.name==name,
-                                                            Beer.style==style,
-                                                            Beer.brewery_id==brewery_id,
-                                                            Beer.size==size)):
+
+            for beer in self.session.query(Beer).filter(or_(Beer.abv == abv,
+                                                            Beer.ibu == ibu,
+                                                            Beer.beer_id == beer_id,
+                                                            Beer.name == name,
+                                                            Beer.style == style,
+                                                            Beer.brewery_id == brewery_id,
+                                                            Beer.size == size)):
                 results.append(beer.to_dict())
+            print(results)
         except Exception as exc:
             raise RuntimeError("Could not retrieve beer(s) from database.") from exc
         return results
+
+    def delete_beer(self, beer_id: int) -> str:
+        try:
+            beer = self.session.query(Beer).filter(Beer.beer_id == beer_id).first()
+            if beer is None:
+                raise ValueError("No beer with such ID exists.")
+            self.session.delete(beer)
+        except Exception as exc:
+            if not isinstance(exc, ValueError):
+                raise RuntimeError("Internal server error") from exc
+            else:
+                raise exc
+
+        return "Successfully deleted."

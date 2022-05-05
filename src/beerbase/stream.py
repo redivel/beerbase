@@ -8,11 +8,11 @@ from database import Database, Database_handler
 handler = Database_handler()
 
 
-def get_beer(abv: Optional[float] = None,
-             ibu: Optional[float] = None,
+def get_beer(abv: Optional[float] = -1,
+             ibu: Optional[float] = -1,
              beer_id: Optional[int] = None,
              name: Optional[str] = None,
-             style: Optional[str] = None,
+             style: Optional[str] = -1,
              brewery_id: Optional[int] = None,
              size: Optional[float] = None
              ) \
@@ -39,12 +39,8 @@ def get_beer(abv: Optional[float] = None,
         response = handler.get_beers(abv=abv, ibu=ibu, beer_id=beer_id, name=name, style=style,
                                      brewery_id=brewery_id, size=size)
     except Exception as exc:
-        if isinstance(exc, RuntimeError):
-            response = "No such beer found."
-            code = 400
-        else:
-            response = "Internal server error."
-            code = 500
+        response = "Could not retrieve beer(s) from database."
+        code = 500
     else:
         if not response:
             response = "No such beer found."
@@ -69,17 +65,14 @@ def delete_beer(beer_id: int) -> tuple[str, int]:
     code = 200
 
     try:
+        handler.delete_beer(beer_id)
         response = "Beer successfully deleted."
     except Exception as exc:
-        if isinstance(exc, RuntimeError):
-            response = "No such beer found."
-            code = 500
+        if isinstance(exc, ValueError):
+            response = "No beer with such ID exists."
+            code = 400
         else:
             response = "Internal server error."
             code = 500
-    else:
-        if response is None:
-            response = "No such beer found."
-            code = 400
 
     return response, code
