@@ -2,14 +2,16 @@ from __future__ import annotations
 
 import csv
 
-import kwargs as kwargs
 from sqlalchemy import create_engine, or_
 from sqlalchemy.orm import sessionmaker
 from typing import Optional, List
 from pathlib import Path
+from logging import getLogger
 
 from datatypes import Beer
 from utils import Singleton
+
+logger = getLogger("logger")
 
 
 class Database(metaclass=Singleton):
@@ -28,7 +30,8 @@ class Database(metaclass=Singleton):
                 raise ConnectionError("Failed to connect to database.") from exc
 
 
-class Database_handler():
+class DatabaseHandler:
+    """Class in charge of communicating with the database."""
     def __init__(self):
         self.session = Database().session
 
@@ -39,20 +42,27 @@ class Database_handler():
             path (Path): Path to csv data file.
         """
 
-        with path.open('r') as file:
-            reader = csv.reader(file)
-            next(reader)
-            header = ['abv', 'ibu', 'beer_id', 'name', 'style', 'brewery_id', 'size']
-            data = []
-            for row in reader:
-                beer_dict = {header[i]: row[i] for i in range(0, len(row))}
-                if not beer_dict['abv'].strip():
-                    beer_dict['abv'] = None
-                if not beer_dict['ibu'].strip():
-                    beer_dict['ibu'] = None
-                beer = Beer.from_dict(beer_dict)
-                self.session.add(beer)
-            self.session.commit()
+        try:
+            with path.open('r') as file:
+                reader = csv.reader(file)
+                next(reader)
+                header = ['abv', 'ibu', 'beer_id', 'name', 'style', 'brewery_id', 'size']
+                data = []
+                for row in reader:
+                    beer_dict = {header[i]: row[i] for i in range(0, len(row))}
+                    if not beer_dict['abv'].strip():
+                        beer_dict['abv'] = None
+                    if not beer_dict['ibu'].strip():
+                        beer_dict['ibu'] = None
+                    beer = Beer.from_dict(beer_dict)
+                    self.session.add(beer)
+        except Exception as exc:
+            logger.error(exc)
+        else:
+            try:
+                self.session.commit()
+            except Exception as exc:
+                logger.error(exc)
 
     def get_beers(self, abv: float, ibu: float, beer_id: int, name: str, style: str, brewery_id: int, size: float) \
             -> List[Beer]:
@@ -106,5 +116,10 @@ class Database_handler():
                 raise RuntimeError("Internal server error") from exc
             else:
                 raise exc
+        else:
+            try:
+                self.session.commit()
+            except Exception as exc:
+                logger.error(exc)
 
         return "Successfully deleted."

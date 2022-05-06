@@ -68,4 +68,5 @@ class Beer(Serializable, Base):
         return cls(**value)
 
     def __str__(self) -> str:
-        return self.to_dict().__str__()
+        return f'Beer(abv: {self.abv}, ibu: {self.ibu}, beer_id: {self.beer_id}, name: {self.name}, ' \
+               f'style: {self.style}, brewery_id: {self.brewery_id}, size: {self.size})'
