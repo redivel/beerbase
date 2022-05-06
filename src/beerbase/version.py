@@ -1,5 +1,4 @@
 from __future__ import annotations
-from server import app
 
 
 def get_version() -> str:

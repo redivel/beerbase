@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional, List, Dict, Union
 from logging import getLogger
 
-from database import Database, DatabaseHandler
+from beerbase.database import Database, DatabaseHandler
 
 handler = DatabaseHandler()
 logger = getLogger("logger")

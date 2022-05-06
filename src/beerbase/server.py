@@ -9,8 +9,8 @@ from pathlib import Path
 from logging import INFO, getLogger, Formatter, StreamHandler
 from typing import Optional
 
-from database import Database, DatabaseHandler
-from datatypes import Base
+from beerbase.database import Database, DatabaseHandler
+from beerbase.datatypes import Base
 
 app = connexion.App("beerbase")
 

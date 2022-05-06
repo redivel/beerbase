@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "beerbase"
+version = "0.1.0"
+description = "Backend API for a databse containing data about beers."
+authors = ["redivel <levente2der@gmail.com>"]
+include = ["assets/*", "assets/templates/*"]
+
+[tool.poetry.scripts]
+beerbase = "beerbase.server:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+connexion = "^2.13.0"
+SQLAlchemy = "^1.4.35"
+swagger-ui-bundle = "^0.0.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

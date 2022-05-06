@@ -8,8 +8,8 @@ from typing import Optional, List
 from pathlib import Path
 from logging import getLogger
 
-from datatypes import Beer
-from utils import Singleton
+from beerbase.datatypes import Beer
+from beerbase.utils import Singleton
 
 logger = getLogger("logger")
 
@@ -23,7 +23,7 @@ class Database(metaclass=Singleton):
         else:
             try:
                 url = f'sqlite:///{db_path}'
-                self.engine = create_engine(url=url, echo=True)
+                self.engine = create_engine(url=url, echo=False)
                 Session = sessionmaker(bind=self.engine)
                 self.session = Session()
             except Exception as exc:
@@ -32,6 +32,7 @@ class Database(metaclass=Singleton):
 
 class DatabaseHandler:
     """Class in charge of communicating with the database."""
+
     def __init__(self):
         self.session = Database().session
 
@@ -64,7 +65,13 @@ class DatabaseHandler:
             except Exception as exc:
                 logger.error(exc)
 
-    def get_beers(self, abv: float, ibu: float, beer_id: int, name: str, style: str, brewery_id: int, size: float) \
+    def get_beers(self, abv: Optional[float] = -1,
+                  ibu: Optional[float] = -1,
+                  beer_id: Optional[int] = None,
+                  name: Optional[str] = None,
+                  style: Optional[str] = -1,
+                  brewery_id: Optional[int] = None,
+                  size: Optional[float] = None) \
             -> List[Beer]:
         """Get beers matching either of specified attributes.
 
