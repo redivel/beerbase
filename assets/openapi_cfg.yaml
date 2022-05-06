@@ -53,13 +53,13 @@ paths:
           schema:
             type: integer
             example: 2169
-          description: ID of searched beer(s).
+          description: ID of searched beer.
         - name: name
           in: query
           schema:
             type: string
             example: Ballz Deep Double IPA
-          description: Name of searched beer(s).
+          description: Name of searched beer.
         - name: style
           in: query
           schema:
